@@ -3,7 +3,7 @@ const rootDom = document.querySelector<HTMLElement>('#root')
 const routes = [
     { path: '/', file: '' },
     { path: '/dashboard', file: '/pages/dashboard.html' },
-    { path: '/profile', file: '/pages/profile.html' },
+    { path: '/profile', file: '/pages/profile.html', script: '/scripts/profile.js' },
 ]
 
 function fetchContent() {
@@ -21,6 +21,12 @@ function fetchContent() {
             .then((content) => {
                 if (rootDom) {
                     rootDom.innerHTML = content
+                }
+            })
+            .then(async () => {
+                if (targetRoute.script) {
+                    const { component } = await import(targetRoute.script)
+                    component.onMounted()
                 }
             })
     }
