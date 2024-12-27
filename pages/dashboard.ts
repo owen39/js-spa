@@ -1,4 +1,6 @@
-export const component = {
+import { Component } from '../types.ts'
+
+export const component: Component = {
     template: `<div class="page-dashboard">
         Hello Dashboard
     </div>`,

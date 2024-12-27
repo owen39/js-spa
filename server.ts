@@ -1,11 +1,21 @@
 import { serveFile } from 'jsr:@std/http/file-server'
 
-Deno.serve((req) => {
+const STATIC_EXTENSIONS = ['.ico', '.html', '.js']
+
+Deno.serve(async (req) => {
     try {
         const path = new URL(req.url).pathname
-        const staticExtensions = ['.ico', '.js', '.html']
+        
+        if (path.endsWith('.ts')) {
+            const file = await Deno.readFile(`.${path}`)
+            return new Response(file, {
+                headers: {
+                    'Content-Type': 'application/javascript'
+                }
+            })
+        }
 
-        if (staticExtensions.some((ext) => path.endsWith(ext))) {
+        if (STATIC_EXTENSIONS.some((ext) => path.endsWith(ext))) {
             return serveFile(req, `.${path}`)
         }
 
