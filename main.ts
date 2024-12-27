@@ -1,27 +1,28 @@
+import { component as dashboardComponent } from "./pages/dashboard.js"
+import { component as profileComponent } from "./pages/profile.js"
+
 const rootDom = document.querySelector<HTMLElement>('#root')
 
 const routes = [
-    { path: '/', file: '' },
-    { path: '/dashboard', file: '/pages/dashboard.js' },
-    { path: '/profile', file: '/pages/profile.js' },
+    { path: '/' },
+    { path: '/dashboard', component: dashboardComponent },
+    { path: '/profile', component: profileComponent },
 ]
 
 function fetchContent() {
     const targetRoute = routes.find(
         (r) => r.path === globalThis.location.pathname
     )
-    if (targetRoute) {
-        if (targetRoute.path === '/' && rootDom) {
+    if (targetRoute && rootDom) {
+        if (targetRoute.path === '/') {
             rootDom.innerHTML = ''
             return
         }
 
-        import(targetRoute.file).then(({ component }) => {
-            if (rootDom) {
-                rootDom.innerHTML = component.template
-                component.onMounted()
-            }
-        })
+        if (targetRoute.component) {
+            rootDom.innerHTML = targetRoute.component.template
+            targetRoute.component.onMounted()
+        }
     }
 }
 
