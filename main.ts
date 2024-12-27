@@ -1,5 +1,5 @@
-import { component as dashboardComponent } from "./pages/dashboard.js"
-import { component as profileComponent } from "./pages/profile.js"
+import { component as dashboardComponent } from './pages/dashboard.js'
+import { component as profileComponent } from './pages/profile.js'
 
 const rootDom = document.querySelector<HTMLElement>('#root')
 
@@ -30,11 +30,16 @@ globalThis.addEventListener('popstate', () => {
     fetchContent()
 })
 
-// TODO: unbound from globalThis
-globalThis.navigateTo = (event) => {
-    event.preventDefault()
-    globalThis.history.pushState({}, '', event.target.href)
-    fetchContent()
-}
+document.addEventListener('click', (event) => {
+    if (
+        event.target &&
+        event.target instanceof HTMLAnchorElement &&
+        event.target.getAttribute('js-link') === "true"
+    ) {
+        event.preventDefault()
+        globalThis.history.pushState({}, '', event.target.href)
+        fetchContent()
+    }
+})
 
 fetchContent()
