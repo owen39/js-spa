@@ -1,6 +1,7 @@
 const rootDom = document.querySelector<HTMLElement>('#root')
 
 const routes = [
+    { path: '/', file: '' },
     { path: '/dashboard', file: '/pages/dashboard.html' },
     { path: '/profile', file: '/pages/profile.html' },
 ]
@@ -10,6 +11,11 @@ function fetchContent() {
         (r) => r.path === globalThis.location.pathname
     )
     if (targetRoute) {
+        if (targetRoute.path === '/' && rootDom) {
+            rootDom.innerHTML = ''
+            return
+        }
+
         fetch(targetRoute.file)
             .then((res) => res.text())
             .then((content) => {
