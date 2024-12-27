@@ -3,7 +3,7 @@ import { serveFile } from 'jsr:@std/http/file-server'
 Deno.serve((req) => {
     try {
         const path = new URL(req.url).pathname
-        const staticExtensions = ['.ico', '.js']
+        const staticExtensions = ['.ico', '.js', '.html']
 
         if (staticExtensions.some((ext) => path.endsWith(ext))) {
             return serveFile(req, `.${path}`)

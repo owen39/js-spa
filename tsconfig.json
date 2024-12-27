@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "lib": ["ES2016", "DOM", "DOM.Iterable"]
+    },
+    "compileOnSave": true,
+    "files": ["./main.ts"]
+}
