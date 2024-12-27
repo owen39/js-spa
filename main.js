@@ -1,31 +1,31 @@
-var rootDom = document.querySelector('#root');
-var routes = [
+const rootDom = document.querySelector('#root');
+const routes = [
     { path: '/', file: '' },
-    { path: '/dashboard', file: '/pages/dashboard.html' },
-    { path: '/profile', file: '/pages/profile.html' },
+    { path: '/dashboard', file: '/pages/dashboard.js' },
+    { path: '/profile', file: '/pages/profile.js' },
 ];
 function fetchContent() {
-    var targetRoute = routes.find(function (r) { return r.path === globalThis.location.pathname; });
+    const targetRoute = routes.find((r) => r.path === globalThis.location.pathname);
     if (targetRoute) {
         if (targetRoute.path === '/' && rootDom) {
             rootDom.innerHTML = '';
             return;
         }
-        fetch(targetRoute.file)
-            .then(function (res) { return res.text(); })
-            .then(function (content) {
+        import(targetRoute.file).then(({ component }) => {
             if (rootDom) {
-                rootDom.innerHTML = content;
+                rootDom.innerHTML = component.template;
+                component.onMounted();
             }
         });
     }
 }
-globalThis.addEventListener('popstate', function () {
+globalThis.addEventListener('popstate', () => {
     fetchContent();
 });
-function navigateTo(event, page) {
+// TODO: unbound from globalThis
+globalThis.navigateTo = (event) => {
     event.preventDefault();
     globalThis.history.pushState({}, '', event.target.href);
     fetchContent();
-}
+};
 fetchContent();

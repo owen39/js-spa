@@ -2,8 +2,8 @@ const rootDom = document.querySelector<HTMLElement>('#root')
 
 const routes = [
     { path: '/', file: '' },
-    { path: '/dashboard', file: '/pages/dashboard.html' },
-    { path: '/profile', file: '/pages/profile.html', script: '/scripts/profile.js' },
+    { path: '/dashboard', file: '/pages/dashboard.js' },
+    { path: '/profile', file: '/pages/profile.js' },
 ]
 
 function fetchContent() {
@@ -16,19 +16,12 @@ function fetchContent() {
             return
         }
 
-        fetch(targetRoute.file)
-            .then((res) => res.text())
-            .then((content) => {
-                if (rootDom) {
-                    rootDom.innerHTML = content
-                }
-            })
-            .then(async () => {
-                if (targetRoute.script) {
-                    const { component } = await import(targetRoute.script)
-                    component.onMounted()
-                }
-            })
+        import(targetRoute.file).then(({ component }) => {
+            if (rootDom) {
+                rootDom.innerHTML = component.template
+                component.onMounted()
+            }
+        })
     }
 }
 
@@ -36,7 +29,8 @@ globalThis.addEventListener('popstate', () => {
     fetchContent()
 })
 
-function navigateTo(event, page: string) {
+// TODO: unbound from globalThis
+globalThis.navigateTo = (event) => {
     event.preventDefault()
     globalThis.history.pushState({}, '', event.target.href)
     fetchContent()
